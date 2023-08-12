@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func calculaAverage(marks [5]float64) float64 {
+func calculateAverage(marks [5]float64) float64 {
 	sum := float64(0)
 	for i := 0; i < len(marks); i++ {
 		sum += marks[i]
@@ -37,11 +37,11 @@ outerLoop:
 		var result float64
 		switch answer {
 		case "андрей":
-			result = calculaAverage(Андрей)
+			result = calculateAverage(Андрей)
 		case "юля":
-			result = calculaAverage(Юля)
+			result = calculateAverage(Юля)
 		case "полина":
-			average := calculaAverage(Полина)
+			average := calculateAverage(Полина)
 			roundedAverage := int(math.Round(average))
 			if roundedAverage == 2 {
 				fmt.Printf("%d, а Полина оказывается двоечница\n", roundedAverage)
