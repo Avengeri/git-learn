@@ -1,51 +1,84 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-)
+import "fmt"
 
-func calculaAverage(marks [5]float64) float64 {
-	sum := float64(0)
-	for _, mark := range marks {
-		sum += mark
+type Subject struct {
+	Name  string
+	Grade int
+}
+
+type Student struct {
+	Name    string
+	Age     int
+	Grades  []Subject
+	Faculty string
+}
+
+type Faculty struct {
+	Name     string
+	Students []Student
+}
+
+type University struct {
+	Name      string
+	Faculties []Faculty
+}
+
+func CalculateAverageGrade(subjects []Subject) float64 {
+	total := 0
+	for _, subject := range subjects {
+		total += subject.Grade
 	}
-	return sum / float64(len(marks))
+	return float64(total) / float64(len(subjects))
+}
+
+func CalculateFacultyAverage(subjects []Subject) float64 {
+	total := 0
+	for _, subject := range subjects {
+		total += subject.Grade
+	}
+	return float64(total) / float64(len(subjects))
 }
 
 func main() {
-	fmt.Println("Введите имя ученика:")
-	var name string
-	fmt.Scan(&name)
-	name = strings.TrimSpace(name)
-
-	var marks [5]float64
-	fmt.Println("Введите 5 оценок через пробел:")
-	for i := 0; i < len(marks); i++ {
-		_, err := fmt.Scan(&marks[i])
-		if err != nil {
-			fmt.Println("Ошибка ввода:", err)
-			return
-		}
+	subjects := []Subject{
+		{Name: "Математика", Grade: 4},
+		{Name: "Физика", Grade: 5},
+		{Name: "Информатика", Grade: 3},
 	}
 
-	fmt.Printf("Оценки %s: %v\n", name, marks)
-
-	var result float64
-	result = calculaAverage(marks)
-	fmt.Printf("Среднее арифметическое оценок %s: %f\n", name, result)
-
-	var continueAnswer string
-	for {
-		fmt.Print("Будем считать еще? да - повторный запуск, нет - выход из программы: ")
-		fmt.Scan(&continueAnswer)
-		continueAnswer = strings.ToLower(continueAnswer)
-		if continueAnswer == "нет" {
-			break
-		} else if continueAnswer != "да" {
-			fmt.Println("Некорректный ввод. Введите 'да' или 'нет'.")
-		}
+	student := Student{
+		Name:    "Иван",
+		Age:     20,
+		Grades:  subjects,
+		Faculty: "Информатики",
 	}
 
-	fmt.Println("Программа завершена.")
+	faculty := Faculty{
+		Name:     "Информатики",
+		Students: []Student{student},
+	}
+
+	university := University{
+		Name:      "Лучший университет",
+		Faculties: []Faculty{faculty},
+	}
+
+	fmt.Println("Имя университета:", university.Name)
+	fmt.Println("Факультеты:")
+	for _, faculty := range university.Faculties {
+		fmt.Println("  Факультет:", faculty.Name)
+		fmt.Println("  Студенты:")
+		for _, student := range faculty.Students {
+			fmt.Println("    Имя:", student.Name)
+			fmt.Println("    Возраст:", student.Age)
+			fmt.Println("    Оценки:")
+			for _, subject := range student.Grades {
+				fmt.Println("      Предмет:", subject.Name)
+				fmt.Println("      Оценка:", subject.Grade)
+			}
+			fmt.Println("    Средний балл студента:", CalculateAverageGrade(student.Grades))
+		}
+		fmt.Println("  Средний балл факультета:", CalculateFacultyAverage(faculty.Students[0].Grades))
+	}
 }
