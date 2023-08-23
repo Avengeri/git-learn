@@ -2,83 +2,32 @@ package main
 
 import "fmt"
 
-type Subject struct {
-	Name  string
-	Grade int
+type Square struct {
+	Side int
 }
 
-type Student struct {
-	Name    string
-	Age     int
-	Grades  []Subject
-	Faculty string
+func (s Square) Perimeter() {
+	//fmt.Printf("%T,%#v \n", s, s)
+	fmt.Printf("Периметр фигуры: %d сантиметров\n", s.Side*4)
 }
 
-type Faculty struct {
-	Name     string
-	Students []Student
+func (s Square) Volume() {
+	fmt.Printf("Объем фигуры: %d кубических сантиметров\n", s.Side*s.Side*s.Side)
 }
-
-type University struct {
-	Name      string
-	Faculties []Faculty
+func (s *Square) Scale(multiplier int) {
+	s.Side *= multiplier
 }
-
-func CalculateAverageGrade(subjects []Subject) float64 {
-	total := 0
-	for _, subject := range subjects {
-		total += subject.Grade
-	}
-	return float64(total) / float64(len(subjects))
+func definition() {
+	s := Square{5}
+	ps := &Square{5}
+	s.Perimeter()
+	s.Volume()
+	ps.Perimeter()
+	ps.Volume()
+	ps.Scale(2)
+	fmt.Printf("что это %d", ps.Scale)
 }
-
-func CalculateFacultyAverage(subjects []Subject) float64 {
-	total := 0
-	for _, subject := range subjects {
-		total += subject.Grade
-	}
-	return float64(total) / float64(len(subjects))
-}
-
 func main() {
-	subjects := []Subject{
-		{Name: "Математика", Grade: 4},
-		{Name: "Физика", Grade: 5},
-		{Name: "Информатика", Grade: 3},
-	}
+	definition()
 
-	student := Student{
-		Name:    "Иван",
-		Age:     20,
-		Grades:  subjects,
-		Faculty: "Информатики",
-	}
-
-	faculty := Faculty{
-		Name:     "Информатики",
-		Students: []Student{student},
-	}
-
-	university := University{
-		Name:      "Лучший университет",
-		Faculties: []Faculty{faculty},
-	}
-
-	fmt.Println("Имя университета:", university.Name)
-	fmt.Println("Факультеты:")
-	for _, faculty := range university.Faculties {
-		fmt.Println("  Факультет:", faculty.Name)
-		fmt.Println("  Студенты:")
-		for _, student := range faculty.Students {
-			fmt.Println("    Имя:", student.Name)
-			fmt.Println("    Возраст:", student.Age)
-			fmt.Println("    Оценки:")
-			for _, subject := range student.Grades {
-				fmt.Println("      Предмет:", subject.Name)
-				fmt.Println("      Оценка:", subject.Grade)
-			}
-			fmt.Println("    Средний балл студента:", CalculateAverageGrade(student.Grades))
-		}
-		fmt.Println("  Средний балл факультета:", CalculateFacultyAverage(faculty.Students[0].Grades))
-	}
 }

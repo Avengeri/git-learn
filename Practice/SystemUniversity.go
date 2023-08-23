@@ -2,38 +2,71 @@ package main
 
 import "fmt"
 
-type Subject struct {
-	Object string
-	Mark   int
-}
-type Student struct {
+type subject struct {
 	Name  string
-	Age   int
-	Marks []int
-	Faculty
+	Grade int
 }
-type Faculty struct {
-	title    string
-	Students []string
+type students struct {
+	Name    string
+	Age     int
+	Grades  []subject
+	Faculty string
+}
+type faculty struct {
+	Name     string
+	Students []students
 }
 
-func AverageMarks(Mark []int) int {
-	sum := 0
-	for i := 0; i < len(Mark); i++ {
-		sum += Mark[i]
-	}
-	return sum / len(Mark)
+type university struct {
+	Name      string
+	Faculties []faculty
 }
-func AverageMarksFaculty(Mark []int) int {
+
+func averageMarks(s []subject) int {
 	sum := 0
-	for i := 0; i < len(Mark); i++ {
-		sum += Mark[i]
+	for _, subject := range s {
+		sum += subject.Grade
 	}
-	return sum / len(Mark)
+	return sum / len(s)
 }
+func averageFacultyMarks(s []subject) int {
+	sum := 0
+	for _, subject := range s {
+		sum += subject.Grade
+	}
+	return sum / len(s)
+}
+
 func main() {
-	Student1 := Student{Name: "Ваня", Age: 21, Marks: []int{3, 3, 4, 5, 1, 2}}
-	Student2 := Student{Name: "Петя", Age: 19, Marks: []int{5, 5, 3, 4, 4, 1}}
-	Student3 := Student{Name: "Коля", Age: 24, Marks: []int{5, 5, 4, 3, 5, 1}}
-	fmt.Println(Student1, Student2, Student3)
+
+	subjects := []subject{
+		{"Математика", 4},
+		{"Информатика", 2},
+		{"История", 3},
+		{"Русский язык", 5},
+	}
+
+	Student1 := students{Name: "Ваня", Age: 21, Grades: subjects}
+	Student2 := students{Name: "Петя", Age: 19, Grades: subjects}
+	Student3 := students{Name: "Коля", Age: 24, Grades: subjects}
+
+	faculties := faculty{Name: "программирования", Students: []students{Student1, Student2, Student3}}
+	university := university{Name: "Лучший университет", Faculties: []faculty{faculties}}
+	fmt.Println("Название университета: ", university.Name)
+	fmt.Println("Факультеты: ")
+	for _, faculty := range university.Faculties {
+		fmt.Println(" Факультет", faculty.Name)
+		fmt.Println(" Студенты:")
+		for _, student := range faculty.Students {
+			fmt.Println("    Имя:", student.Name)
+			fmt.Println("    Возраст:", student.Age)
+			fmt.Println("    Оценки:")
+			for _, subject := range student.Grades {
+				fmt.Println(" 		Предмет:", subject.Name)
+				fmt.Println(" 		Оценка:", subject.Grade)
+			}
+			fmt.Println(" 	 Средний балл студента", averageMarks(student.Grades))
+		}
+		fmt.Println("  Средний балл факультета", averageFacultyMarks(faculty.Students[0].Grades))
+	}
 }
